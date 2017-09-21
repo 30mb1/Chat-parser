@@ -23,10 +23,11 @@ class Storage(object):
 
 
     def messages_in_period(self, from_, to_, channel, nickname=None):
-        from_ = datetime.strptime(from_, "%Y.%m.%d %H:%M:%S")
-        to_ = datetime.strptime(to_, "%Y.%m.%d %H:%M:%S")
         if from_ == None or to_ == None:
             return []
+        from_ = datetime.strptime(from_, "%Y.%m.%d %H:%M:%S")
+        to_ = datetime.strptime(to_, "%Y.%m.%d %H:%M:%S")
+
         find_query = {
             'date' : {
                 '$gte' : from_,
