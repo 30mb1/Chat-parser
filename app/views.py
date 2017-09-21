@@ -19,7 +19,7 @@ def index():
     messages = []
 
     if form.submit.data and form.validate_on_submit():
-        
+
         from_ = datetime.combine(form.from_date.data, datetime.min.time())
         to_ = datetime.combine(form.to_date.data, datetime.min.time())
 
@@ -28,7 +28,7 @@ def index():
         session['channel'] = form.channel.data
         session['nickname'] = form.nickname.data
 
-    messages = [i for i in current_app.database.messages_in_period(session['from'], session['to'], session['channel'], session['nickname'])]
+    messages = [i for i in current_app.database.messages_in_period(session.get('from', '0.0.0 0:0:0'), session.get('to', '0.0.0 0:0:0'), session['channel'], session['nickname'])]
 
     return render_template('index.html', logs=reversed(messages), form=form)
 
