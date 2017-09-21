@@ -14,21 +14,21 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route('/index', methods=['GET','POST'])
 def index():
     form = chatSetForm()
-    print (form.data)
+    #print (form.data)
 
     messages = []
 
-    if form.validate_on_submit():
-        from_ = form.from_date.data
-        to_ = form.to_date.data
-        channel = form.channel.data
+    if form.submit.data and form.validate_on_submit():
+        
+        from_ = datetime.combine(form.from_date.data, datetime.min.time())
+        to_ = datetime.combine(form.to_date.data, datetime.min.time())
 
-        session['from'] = from_
-        session['to'] = to_
-        session['channel'] = channel
+        session['from'] = datetime.strftime(from_, "%Y.%m.%d %H:%M:%S")
+        session['to'] = datetime.strftime(to_, "%Y.%m.%d %H:%M:%S")
+        session['channel'] = form.channel.data
+        session['nickname'] = form.nickname.data
 
-
-    messages = [i for i in current_app.database.messages_in_period(session['from'], session['to'], session['channel'])]
+    messages = [i for i in current_app.database.messages_in_period(session['from'], session['to'], session['channel'], session['nickname'])]
 
     return render_template('index.html', logs=reversed(messages), form=form)
 
@@ -36,7 +36,9 @@ def index():
 def before_first_request():
     current_app.database = Storage()
     today = datetime.combine(date.today(), datetime.min.time())
-    session['from'] = today
-    session['to'] = today + timedelta(days=1)
+    next_day = today + timedelta(days=1)
+    session['from'] = datetime.strftime(today, "%Y.%m.%d %H:%M:%S")
+    session['to'] = datetime.strftime(next_day, "%Y.%m.%d %H:%M:%S")
     session['channel'] = 'chat_ru'
+    session['nickname'] = ''
     return
