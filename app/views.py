@@ -28,7 +28,7 @@ def index():
         session['channel'] = form.channel.data
         session['nickname'] = form.nickname.data
 
-    messages = [i for i in current_app.database.messages_in_period(session.get('from', '0.0.0 0:0:0'), session.get('to', '0.0.0 0:0:0'), session['channel'], session['nickname'])]
+    messages = [i for i in current_app.database.messages_in_period(session.get('from', '0.0.0 0:0:0'), session.get('to', '0.0.0 0:0:0'), session.get('channel', 'chat_ru'), session.get('nickname', None))]
 
     return render_template('index.html', logs=reversed(messages), form=form)
 
