@@ -103,7 +103,7 @@
                                     <tbody>
                                         {% for log in logs%}
                                         <tr>
-                                            <td>{{log.date}} - {{log.login}} - {{log.msg}}</td>
+                                            <td>{{log.date.strftime("%Y.%m.%d %H:%M:%S")}} - {{"{:12}".format(log.login)}} - {{log.msg}}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
