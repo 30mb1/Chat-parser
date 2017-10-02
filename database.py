@@ -35,7 +35,12 @@ class Storage(object):
 
     def messages_in_period(self, from_, to_, channel, nickname=None):
         if from_ == None or to_ == None:
-            return []
+            #if no input, return current day
+            today = datetime.combine(date.today(), datetime.min.time())
+            next_day = today + timedelta(days=1)
+            from_ = datetime.strftime(today, "%Y.%m.%d %H:%M:%S")
+            to_ = datetime.strftime(next_day, "%Y.%m.%d %H:%M:%S")
+
         from_ = datetime.strptime(from_, "%Y.%m.%d %H:%M:%S")
         to_ = datetime.strptime(to_, "%Y.%m.%d %H:%M:%S")
 

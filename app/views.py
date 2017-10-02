@@ -33,7 +33,7 @@ def index():
 
     messages = [i for i in current_app.database.messages_in_period(session.get('from', None), session.get('to', None), session.get('channel', 'chat_ru'), session.get('nickname', None))]
     messages = list(reversed(messages))
-    pages = [messages[i:i + 300] for i in range(0, len(messages), 300)]
+    pages = [messages[i:i + 200] for i in range(0, len(messages), 200)]
 
     if request.args.get('page', None):
         page = int(request.args['page'])
@@ -45,10 +45,4 @@ def index():
 @app.before_first_request
 def before_first_request():
     current_app.database = Storage()
-    today = datetime.combine(date.today(), datetime.min.time())
-    next_day = today + timedelta(days=1)
-    session['from'] = datetime.strftime(today, "%Y.%m.%d %H:%M:%S")
-    session['to'] = datetime.strftime(next_day, "%Y.%m.%d %H:%M:%S")
-    session['channel'] = 'chat_ru'
-    session['nickname'] = ''
     return
