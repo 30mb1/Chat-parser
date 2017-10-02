@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 import websocket
-import thread
+import threading
 import time
 import json
 import logging
 from database import Storage
-
-def utify(msg):
-    if isinstance(msg, unicode):
-        msg = msg.encode('utf-8')
-
-    return msg
 
 s = Storage()
 
@@ -25,31 +19,18 @@ chat_cn = { "event" : "pusher:subscribe", "data" : { "channel" : 'chat_cn' } }
 def on_message(ws, message):
     message = json.loads(message)
 
-
-    if utify(message['event']) == 'pusher:connection_established' or utify(message['event']) == 'pusher_internal:subscription_succeeded':
+    if message['event'] == 'pusher:connection_established' or message['event'] == 'pusher_internal:subscription_succeeded':
         print (message)
         return
 
-    channel = utify(message['channel'])
+    channel = message['channel']
+    print (type(message['data']))
     message = json.loads(message['data'])
-
-    message = utify(message)
-
     message = json.loads(message)
-    norm_dict = {}
 
-    for key, item in message.items():
-        norm_dict[utify(key)] = utify(item)
-
-    print (norm_dict)
-
-
-    #keys = [str_ for str_ in message.keys()]
-    if 'msg' in norm_dict.keys():
-        s.save_message(norm_dict, channel)
-        logger.info(norm_dict)
-
-
+    if 'msg' in message.keys():
+        s.save_message(message, channel)
+        logger.info(message)
 
 def on_error(ws, error):
     print(error)
@@ -64,8 +45,8 @@ def on_open(ws):
         ws.send(json.dumps(chat_ru))
         ws.send(json.dumps(chat_en))
         ws.send(json.dumps(chat_cn))
-    thread.start_new_thread(run, ())
-
+    t = threading.Thread(target=run(), args=())
+    t.start()
 
 while True:
     try:

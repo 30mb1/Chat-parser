@@ -9,3 +9,9 @@ class chatSetForm(FlaskForm):
     channel = SelectField('Channel', choices=[('chat_en', 'en'), ('chat_ru', 'ru'), ('chat_cn', 'cn')])
     nickname = TextField('Nickname')
     submit = SubmitField('Show')
+
+class addCommnetForm(FlaskForm):
+    from_user = StringField('Username')
+    comment = StringField('Comment', [Required()])
+    msg_id = StringField('msg_id')
+    submit_comment = SubmitField('Add')
