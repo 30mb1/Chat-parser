@@ -95,6 +95,7 @@
                                 </div>
 
                             </form>
+                            
                         </div>
                     </div>
                 </div>
@@ -110,24 +111,21 @@
                 </ul>
 
                 <div class="row">
-                    <div class="card">
-                        <div class="content">
-                            <div class="col-md-12">
-                            </div>
-                            {% if cur_username %}
-                                <h5 class="title">Your current username: <b>{{cur_username}}</b></h5>
-                            {% else %}
-                                <h5 class="title"><b>You didn't specify any username</b></h5>
-                                {% set cur_username = 'Anonymous' %}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="card ">
-                        <div class="header">
-                            <h4 class="title">Chat history</h4>
+                        <div class="row">
+                            <div class="header">
+                                <div class="col-md-6">
+                                    <h4 class="title">Chat history</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    {% if cur_username %}
+                                        <h4 class="title" style="float:right">Your current username: <b>{{cur_username}}</b></h4>
+                                    {% else %}
+                                        <h4 class="title" style="float:right"><b>You didn't specify any username</b></h4>
+                                        {% set cur_username = 'Anonymous' %}
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                         <div class="content">
                             <div class="table-full-width" style="height:auto; overflow: auto">
