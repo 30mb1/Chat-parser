@@ -15,3 +15,7 @@ class addCommnetForm(FlaskForm):
     comment = StringField('Comment', [Required()])
     msg_id = StringField('msg_id')
     submit_comment = SubmitField('Add')
+
+class udpateAccountForm(FlaskForm):
+    username = StringField('Username', [Required()])
+    submit = SubmitField('Update')

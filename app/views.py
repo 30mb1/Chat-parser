@@ -40,7 +40,18 @@ def index():
     else:
         page = 0
 
-    return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form)
+    return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form, cur_username=session.get('username', ''))
+
+@app.route('/account',  methods=['GET','POST'])
+def account():
+    form = forms.udpateAccountForm()
+
+    if form.submit.data and form.validate_on_submit():
+        session['username'] = form.username.data
+    print (session.get('username', ''))
+
+    return render_template('account.html', form=form, cur_username=session.get('username', ''))
+
 
 @app.before_first_request
 def before_first_request():

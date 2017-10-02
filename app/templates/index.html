@@ -32,9 +32,13 @@
 
             <ul class="nav">
                 <li class="active">
-                    <a href="index">
+                    <a href="/index">
                         <i class="pe-7s-graph"></i>
                         <p>Dashboard</p>
+                    </a>
+                    <a href="/account">
+                        <i class="pe-7s-user"></i>
+                        <p>Account</p>
                     </a>
                 </li>
             </ul>
@@ -47,7 +51,7 @@
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
                     </button>
-                    <a class="navbar-brand" href="#">Dashboard</a>
+                    <a class="navbar-brand">Dashboard</a>
                 </div>
             </div>
         </nav>
@@ -104,6 +108,21 @@
                 </ul>
 
                 <div class="row">
+                    <div class="card">
+                        <div class="content">
+                            <div class="col-md-12">
+                            </div>
+                            {% if cur_username %}
+                                <h5 class="title">Your current username: <b>{{cur_username}}</b></h5>
+                            {% else %}
+                                <h5 class="title"><b>You didn't specify any username</b></h5>
+                                {% set cur_username = 'Anonymous' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="card ">
                         <div class="header">
                             <h4 class="title">Chat history</h4>
@@ -131,26 +150,27 @@
                                                 <b>{{com.username}}:</b> {{com.text}}<br/>
                                                 {% endfor %}
                                             </td>
-                                            <form action="/index" method="post">
-                                            <td class="col-md-1" style="vertical-align: top;">
-                                                <input type="text" class="form-control" placeholder="username" name="from_user">
-                                            </td>
-                                            <td class="col-md-2" style="vertical-align: top;">
+
+                                            <td class="col-md-3" style="vertical-align: top;">
+
+                                                <form action="/index" method="post">
                                                     {{ form2.csrf_token }}
+                                                    <input type="hidden" class="form-control" value={{cur_username}} name="from_user">
 
-                                                  <div class="input-group">
+                                                    <div class="input-group">
 
-                                                    <input type="text" class="form-control" placeholder="comment" name="comment">
-                                                    <input type="hidden"  name="submit_comment" value="+">
-                                                    <input type="hidden"  name="msg_id" value="{{log.msg_id}}">
-                                                    <div class="input-group-btn">
-                                                      <button class="button button-primary button-square" type="submit">
-                                                        <i class="fa fa-plus"></i>
-                                                      </button>
+                                                        <input type="text" class="form-control" placeholder="comment" name="comment">
+                                                        <input type="hidden"  name="submit_comment" value="+">
+                                                        <input type="hidden"  name="msg_id" value="{{log.msg_id}}">
+                                                        <div class="input-group-btn">
+                                                          <button class="button button-primary button-square" type="submit">
+                                                            <i class="fa fa-plus"></i>
+                                                          </button>
+                                                        </div>
                                                     </div>
-                                                  </div>
+                                                </form>
                                             </td>
-                                            </form>
+
                                         </tr>
                                         {% endfor %}
                                     </tbody>
