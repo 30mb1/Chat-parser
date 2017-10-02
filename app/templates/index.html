@@ -93,9 +93,7 @@
                                         {{ render_field(form.nickname, class="form-control")}}
                                     </div>
                                 </div>
-
                             </form>
-                            
                         </div>
                     </div>
                 </div>
@@ -143,7 +141,7 @@
                                         {% for log in logs[page] %}
                                         <tr>
                                             <td class="col-md-1" style="vertical-align: top;">{{log.date.strftime("%Y.%m.%d %H:%M:%S")}}</td>
-                                            <td class="col-md-1" style="vertical-align: top;">{{"{:12}".format(log.login)}}</td>
+                                            <td class="col-md-1" style="vertical-align: top;">{{"{}".format(log.login)}}</td>
                                             <td class="col-md-4" style="vertical-align: top;">{{log.msg}}</td>
                                             <td class="col-md-3" style="vertical-align: top;">
                                                 {% for com in log.comments %}
