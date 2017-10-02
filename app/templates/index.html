@@ -57,30 +57,37 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="card ">
-                        <div class="header">
-                            <h4 class="title">Display settings</h4>
+                        <div class="row">
+                            <div class="header">
+                                <div class="col-md-2">
+                                    <h4 class="title">Display settings</h4>
+                                </div>
+                                <div class="col-md-10">
+                                    {{ form.submit(class="button button-rounded button-primary", value="Show", form="form1") }}
+                                </div>
+                            </div>
                         </div>
+
+
                         {% from "/macros.html" import render_field %}
                         <div class="content">
-                            <form action="index" method="post">
+                            <form action="index" method="post" id="form1">
                                 {{ form.csrf_token }}
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         {{ render_field(form.from_date, class="form-control", placeholder="2017-01-01") }}
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         {{ render_field(form.to_date, class="form-control", placeholder="2017-02-02") }}
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         {{ render_field(form.channel, class="form-control")}}
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         {{ render_field(form.nickname, class="form-control")}}
                                     </div>
                                 </div>
-                                {{ form.submit(class="button button-pill button-primary", value="Show") }}
+
                             </form>
                         </div>
                     </div>
