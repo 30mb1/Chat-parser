@@ -86,6 +86,16 @@
                     </div>
                 </div>
 
+                <ul class="pagination">
+                    {% for log in logs %}
+                        {% if loop.index - 1 == page %}
+                            <li class="active"><a href="/index?page={{loop.index - 1}}">{{loop.index}}</a></li>
+                        {% else %}
+                            <li><a href="/index?page={{loop.index - 1}}">   {{loop.index}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
                 <div class="row">
                     <div class="card ">
                         <div class="header">
@@ -104,12 +114,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for log in logs%}
+                                        {% for log in logs[page] %}
                                         <tr>
                                             <td class="col-md-1" style="vertical-align: top;">{{log.date.strftime("%Y.%m.%d %H:%M:%S")}}</td>
                                             <td class="col-md-1" style="vertical-align: top;">{{"{:12}".format(log.login)}}</td>
                                             <td class="col-md-4" style="vertical-align: top;">{{log.msg}}</td>
-                                            <td class="col-md-3">
+                                            <td class="col-md-3" style="vertical-align: top;">
                                                 {% for com in log.comments %}
                                                 <b>{{com.username}}:</b> {{com.text}}<br/>
                                                 {% endfor %}
