@@ -48,7 +48,6 @@ def account():
 
     if form.submit.data and form.validate_on_submit():
         session['username'] = form.username.data
-    print (session.get('username', ''))
 
     return render_template('account.html', form=form, cur_username=session.get('username', ''))
 
