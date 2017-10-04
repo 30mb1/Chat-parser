@@ -14,17 +14,14 @@ logging.basicConfig(level=logging.DEBUG)
 def index():
     form = forms.chatSetForm()
     comm_form = forms.addCommnetForm()
-    #print (form.data)
 
     messages = []
 
     if form.submit.data and form.validate_on_submit():
+        print (request.form)
 
-        from_ = datetime.combine(form.from_date.data, datetime.min.time())
-        to_ = datetime.combine(form.to_date.data, datetime.min.time())
-
-        session['from'] = datetime.strftime(from_, "%Y.%m.%d %H:%M:%S")
-        session['to'] = datetime.strftime(to_, "%Y.%m.%d %H:%M:%S")
+        session['from'] = datetime.strftime(form.from_date.data, "%Y.%m.%d %H:%M:%S")
+        session['to'] = datetime.strftime(form.to_date.data, "%Y.%m.%d %H:%M:%S")
         session['channel'] = form.channel.data
         session['nickname'] = form.nickname.data
     elif comm_form.submit_comment.data and comm_form.validate_on_submit():
@@ -50,6 +47,13 @@ def account():
         session['username'] = form.username.data
 
     return render_template('account.html', form=form, cur_username=session.get('username', ''))
+
+@app.route('/index1',  methods=['GET','POST'])
+def index1():
+
+
+    return render_template('index0.html')
+
 
 
 @app.before_first_request

@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, SubmitField, IntegerField, SelectField, StringField, TextField, DateField
+from wtforms import SubmitField, IntegerField, SelectField, StringField, DateTimeField
 from wtforms.validators import Required, Optional
 
 
 class chatSetForm(FlaskForm):
-    from_date = DateField('From', [Required()])
-    to_date = DateField('To', [Required()])
+    from_date = DateTimeField('From', format='%Y-%m-%d %H:%M', validators=[Required()])
+    to_date = DateTimeField('To', format='%Y-%m-%d %H:%M', validators=[Required()])
     channel = SelectField('Channel', choices=[('chat_en', 'en'), ('chat_ru', 'ru'), ('chat_cn', 'cn')])
-    nickname = TextField('Nickname')
+    nickname = StringField('Nickname')
     submit = SubmitField('Show')
 
 class addCommnetForm(FlaskForm):
