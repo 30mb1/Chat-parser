@@ -1,0 +1,3 @@
+[submodule "app/static/bootstrap-datetimepicker"]
+	path = app/static/bootstrap-datetimepicker
+	url = https://github.com/smalot/bootstrap-datetimepicker
