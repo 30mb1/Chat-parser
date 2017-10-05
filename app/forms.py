@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, IntegerField, SelectField, StringField, DateTimeField
+from wtforms import SubmitField, IntegerField, SelectField, StringField, DateTimeField, PasswordField
 from wtforms.validators import Required, Optional
 
 
@@ -18,3 +18,12 @@ class addCommnetForm(FlaskForm):
 class udpateAccountForm(FlaskForm):
     username = StringField('Username', [Required()])
     submit = SubmitField('Update')
+
+class LoginForm(FlaskForm):
+    login = StringField('Login', [Required()])
+    password = PasswordField('Password', [Required()])
+
+class RegisterForm(FlaskForm):
+    username = StringField('Username', [Required()])
+    password = PasswordField('Password', [Required()])
+    login = StringField('Login', [Required()])

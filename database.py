@@ -6,6 +6,60 @@ class Storage(object):
     def __init__(self):
         self.database = MongoClient()['wex_chat_parser']
 
+    def username_exist(self, username):
+        return self.database['accounts'].find_one(
+            {
+                'username' : username
+            }
+        )
+
+    def login_exist(self, login):
+        return self.database['accounts'].find_one(
+            {
+                'login' : login
+            }
+        )
+
+    def get_account(self, login):
+        return self.database['accounts'].find_one(
+            {
+                'login' : login
+            }
+        )
+
+    def register_new_account(self, data):
+        if self.login_exist(data['login']):
+            return 'This login is already taken.'
+
+        if self.username_exist(data['username']):
+            return 'This username is already taken.'
+
+        data.pop('csrf_token', None)
+
+        self.database['accounts'].insert_one(data)
+
+        return True
+
+    def change_username(self, cur_name, new_name):
+        return self.database['accounts'].update_one(
+            {
+                'username' : cur_name
+            },
+            {
+                '$set' : {
+                    'username' : new_name
+                }
+            }
+        )
+
+    def check_auth(self, login, password):
+        return self.database['accounts'].find_one(
+            {
+                'login' : login,
+                'password' : password
+            }
+        )
+
     def save_message(self, data, channel):
         data['channel'] = channel
         data['date'] = datetime.utcnow()
