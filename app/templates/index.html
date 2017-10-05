@@ -31,12 +31,37 @@
     	<div class="sidebar-wrapper">
 
             <ul class="nav">
-                <li class="active">
-                    <a href="/index">
-                        <i class="pe-7s-graph"></i>
-                        <p>Dashboard</p>
+                {% if code == 'chat_ru' %}
+                    <li class="active">
+                {% else %}
+                    <li>
+                {% endif %}
+                    <a href="/chat_ru">
+                        <i class="pe-7s-global"></i>
+                        <p>RU</p>
                     </a>
                 <li/>
+                {% if code == 'chat_en' %}
+                    <li class="active">
+                {% else %}
+                    <li>
+                {% endif %}
+                    <a href="/chat_en">
+                        <i class="pe-7s-global"></i>
+                        <p>EN</p>
+                    </a>
+                <li/>
+                {% if code == 'chat_cn' %}
+                    <li class="active">
+                {% else %}
+                    <li>
+                {% endif %}
+                    <a href="/chat_cn">
+                        <i class="pe-7s-global"></i>
+                        <p>CN</p>
+                    </a>
+                <li/>
+
                 <li>
                     <a href="/account">
                         <i class="pe-7s-user"></i>
@@ -76,8 +101,11 @@
                                 <div class="col-md-2">
                                     <h4 class="title">Display settings</h4>
                                 </div>
-                                <div class="col-md-10">
+                                <div class="col-md-2">
                                     {{ form.submit(class="button button-rounded button-primary", value="Show", form="form1") }}
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 class="title">Current period: {{date.from}} - {{date.to}}</h4>
                                 </div>
                             </div>
                         </div>
@@ -87,10 +115,10 @@
 
                         {% from "/macros.html" import render_field %}
                         <div class="content">
-                            <form action="index" method="post" id="form1">
+                            <form action="/{{code}}" method="post" id="form1">
                                 {{ form.csrf_token }}
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="label" for="from_date">From</label>
                                             <div class="input-group date form_datetime col-md-12" data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_input1" style ="padding-top : 0px;">
@@ -101,7 +129,7 @@
                                             <input type="hidden" id="dtp_input1" value="" /><br/>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="label" for="to_date">To</label>
                                             <div class="input-group date form_datetime col-md-12" data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_input1" style ="padding-top : 0px;">
@@ -112,14 +140,13 @@
                                             <input type="hidden" id="dtp_input1" value="" /><br/>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        {{ render_field(form.channel, class="form-control")}}
-                                    </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         {{ render_field(form.nickname, class="form-control")}}
                                     </div>
 
+
                                 </div>
+
                             </form>
                         </div>
                     </div>
