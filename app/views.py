@@ -67,7 +67,7 @@ def register():
     error = None
     if form.validate_on_submit():
         res = current_app.database.register_new_account(form.data)
-        if current_app.database.register_new_account(form.data) == True:
+        if res == True:
             return redirect(url_for('login'))
         else:
             error = res
@@ -83,7 +83,7 @@ def logout():
 @app.before_request
 def before_request():
     allowed = ['login', 'register']
-    if not session.get('logged_in', False) and request.endpoint not in allowed :
+    if not session.get('logged_in', False) and request.endpoint not in allowed:
         return redirect(url_for('login'))
 
 @app.before_first_request
