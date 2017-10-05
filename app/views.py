@@ -9,9 +9,11 @@ from multiprocessing import Process
 
 logging.basicConfig(level=logging.DEBUG)
 
-@app.route('/', methods=['GET','POST'])
-@app.route('/index', methods=['GET','POST'])
-def index():
+@app.route('/')
+@app.route('/index')
+@app.route('/<code>', methods=['GET','POST'])
+def index(code='chat_ru'):
+    print (code)
     form = forms.chatSetForm()
     comm_form = forms.addCommnetForm()
 
@@ -22,13 +24,12 @@ def index():
 
         session['from'] = datetime.strftime(form.from_date.data, "%Y.%m.%d %H:%M:%S")
         session['to'] = datetime.strftime(form.to_date.data, "%Y.%m.%d %H:%M:%S")
-        session['channel'] = form.channel.data
         session['nickname'] = form.nickname.data
     elif comm_form.submit_comment.data and comm_form.validate_on_submit():
         current_app.database.add_comment(comm_form.data)
 
 
-    messages = [i for i in current_app.database.messages_in_period(session.get('from', None), session.get('to', None), session.get('channel', 'chat_ru'), session.get('nickname', None))]
+    messages = [i for i in current_app.database.messages_in_period(session.get('from', None), session.get('to', None), code, session.get('nickname', None))]
     messages = list(reversed(messages))
     pages = [messages[i:i + 200] for i in range(0, len(messages), 200)]
 
@@ -37,7 +38,8 @@ def index():
     else:
         page = 0
 
-    return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form, cur_username=session.get('username', ''))
+    cur_dates = { 'from' : session.get('from', 'Today'), 'to' : session.get('to', 'Today') }
+    return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form, cur_username=session.get('username', ''), code=code, date=cur_dates)
 
 @app.route('/account',  methods=['GET','POST'])
 def account():
@@ -47,13 +49,6 @@ def account():
         session['username'] = form.username.data
 
     return render_template('account.html', form=form, cur_username=session.get('username', ''))
-
-@app.route('/index1',  methods=['GET','POST'])
-def index1():
-
-
-    return render_template('index0.html')
-
 
 
 @app.before_first_request
