@@ -24,20 +24,22 @@ def on_message(ws, message):
         return
 
     channel = message['channel']
-    print (type(message['data']))
+    #print (type(message['data']))
     message = json.loads(message['data'])
     message = json.loads(message)
 
     if 'msg' in message.keys():
         s.save_message(message, channel)
-        logger.info(message)
+        #logger.info(message)
 
 def on_error(ws, error):
     print(error)
+    raise Exception
 
 def on_close(ws):
     ws.close()
     print("### closed ###")
+    raise Exception
 
 def on_open(ws):
     def run(*args):
