@@ -62,6 +62,7 @@ def login():
 
 @app.route('/register', methods=['GET','POST'])
 def register():
+    return 'disabled'
     form = forms.RegisterForm()
 
     error = None
