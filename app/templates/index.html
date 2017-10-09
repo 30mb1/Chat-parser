@@ -62,12 +62,14 @@
                     </a>
                 <li/>
 
+                {% if cur_username %}
                 <li>
                     <a href="/account">
                         <i class="pe-7s-user"></i>
                         <p>Account</p>
                     </a>
                 </li>
+                {% endif %}
             </ul>
     	</div>
     </div>
@@ -83,13 +85,20 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="logout">
+                            {% if cur_username %}
+                            <a href="/logout">
                                 <p>Log Out</p>
                             </a>
+                            {% else %}
+                            <a href="/login">
+                                <p>Log In</p>
+                            </a>
+                            {% endif %}
                         </li>
                         <li class="separator hidden-lg hidden-md"></li>
                     </ul>
                 </div>
+
             </div>
         </nav>
 
@@ -190,7 +199,9 @@
                                             <th>User</th>
                                             <th>Text</th>
                                             <th>Comments</th>
+                                            {% if cur_username %}
                                             <th>New Comment</th>
+                                            {% endif %}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -205,6 +216,7 @@
                                                 {% endfor %}
                                             </td>
 
+                                            {% if cur_username %}
                                             <td class="col-md-3" style="vertical-align: top;">
 
                                                 <form action="/{{code}}" method="post">
@@ -224,6 +236,7 @@
                                                     </div>
                                                 </form>
                                             </td>
+                                            {% endif %}
 
                                         </tr>
                                         {% endfor %}

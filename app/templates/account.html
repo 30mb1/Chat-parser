@@ -74,9 +74,15 @@
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="logout">
+                                {% if cur_username %}
+                                <a href="/logout">
                                     <p>Log Out</p>
                                 </a>
+                                {% else %}
+                                <a href="/login">
+                                    <p>Log In</p>
+                                </a>
+                                {% endif %}
                             </li>
                             <li class="separator hidden-lg hidden-md"></li>
                         </ul>
@@ -124,43 +130,7 @@
                             </div>
 
                     </div>
-                    <div class="row">
-                        {% for account in all_accounts %}
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="header">
-                                    <h4 class="title">{{account.phone}}</h4>
-                                </div>
-                                {% with messages = get_flashed_messages(category_filter=["activating error"]) %}
-                                  {% if messages %}
-                                    <ul class=flashes>
-                                    {% for message in messages %}
-                                      <li>{{ message }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                  {% endif %}
-                                {% endwith %}
-                                <hr/>
-                                <div class="content">
-                                    <form action="account" method="post">
-                                    <div class="form-group">
-                                        {% if not account.activated %}
-                                        <p>Enter code: </p><input class="form-control" name="code" type="text" placeholder="code">
-                                        {% else %}
-                                        <p><b>Activated: </b> True </p>
-                                        {% endif %}
-                                    </div>
-                                        <input type="hidden" name="phone" value="{{account.phone}}">
-                                        {% if not account.activated %}
-                                        <input type="submit" name="action" value="Activate" class="button button-pill button-primary">
-                                        {% endif %}
-                                        <input type="submit" name="action" value="Remove" class="button button-pill button-primary">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+
                 </div>
             </div>
         </div>

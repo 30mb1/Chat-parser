@@ -2,7 +2,7 @@ from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
 
 app = Flask(__name__)
-app.secret_key = 'L\x16v\xcc\x05\xd5\x10_\xee\xce\xd9\x1b\xaf\x06\xc0\xa4\xe6\x13\x0e\x8a\xad?W\xaf'
+app.secret_key = '`\xbb>\xb2[\xcdJA\\X\xa1\xb2\xdb\x9c\x17\x80/;\xe6\x05\xb4\xf0\xa4\xb5'
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 from app import views

@@ -34,7 +34,14 @@ def index(code='chat_ru'):
         page = 0
 
     cur_dates = { 'from' : session.get('from', 'Today'), 'to' : session.get('to', 'Today') }
-    return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form, cur_username=session['username'], code=code, date=cur_dates)
+
+    #check if it is admin
+    #if yes - show comment form
+    if session.get('logged_in', False):
+        return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form, cur_username=session['username'], code=code, date=cur_dates)
+
+    #if not, not allow user to write comments to messages
+    return render_template('index.html', logs=pages, page=page, form=form, code=code, date=cur_dates)
 
 @app.route('/account',  methods=['GET','POST'])
 def account():
@@ -44,7 +51,11 @@ def account():
         current_app.database.change_username(session['username'], form.username.data)
         session['username'] = form.username.data
 
-    return render_template('account.html', form=form, cur_username=session['username'])
+    #only admmin can have username in system
+    if session.get('logged_in', False):
+        return render_template('account.html', form=form, cur_username=session['username'])
+
+    return redirect(url_for('index'))
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -79,13 +90,14 @@ def register():
 def logout():
     session.clear()
 
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.before_request
 def before_request():
     allowed = ['login', 'register']
     if not session.get('logged_in', False) and request.endpoint not in allowed:
-        return redirect(url_for('login'))
+        session.pop('username', None)
+        session.pop('login', None)
 
 @app.before_first_request
 def before_first_request():
