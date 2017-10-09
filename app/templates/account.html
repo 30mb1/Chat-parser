@@ -34,33 +34,69 @@
         <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
         	<div class="sidebar-wrapper">
                 <ul class="nav">
-
-                    <li>
+                    {% if code == 'chat_ru' %}
+                        <li class="active">
+                    {% else %}
+                        <li>
+                    {% endif %}
                         <a href="/chat_ru">
                             <i class="pe-7s-global"></i>
                             <p>RU</p>
                         </a>
                     <li/>
-
-                    <li>
+                    {% if cur_username %}
+                        <li>
+                            <a href="/chat_ru?favourite=True">
+                                <i class="pe-7s-global"></i>
+                                <p>RU favourite</p>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if code == 'chat_en' %}
+                        <li class="active">
+                    {% else %}
+                        <li>
+                    {% endif %}
                         <a href="/chat_en">
                             <i class="pe-7s-global"></i>
                             <p>EN</p>
                         </a>
                     <li/>
-
-                    <li>
+                    {% if cur_username %}
+                        <li>
+                            <a href="/chat_en?favourite=True">
+                                <i class="pe-7s-global"></i>
+                                <p>EN favourite</p>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if code == 'chat_cn' %}
+                        <li class="active">
+                    {% else %}
+                        <li>
+                    {% endif %}
                         <a href="/chat_cn">
                             <i class="pe-7s-global"></i>
                             <p>CN</p>
                         </a>
                     <li/>
+                    {% if cur_username %}
+                        <li>
+                            <a href="/chat_cn?favourite=True">
+                                <i class="pe-7s-global"></i>
+                                <p>CN favourite</p>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if cur_username %}
                     <li class="active">
-                        <a href="account">
+                        <a href="/account">
                             <i class="pe-7s-user"></i>
                             <p>Account</p>
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
         	</div>
         </div>

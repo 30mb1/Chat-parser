@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, IntegerField, SelectField, StringField, DateTimeField, PasswordField
+from wtforms import SubmitField, IntegerField, SelectField, StringField, DateTimeField, PasswordField, BooleanField
 from wtforms.validators import Required, Optional
 
 
@@ -9,7 +9,7 @@ class chatSetForm(FlaskForm):
     nickname = StringField('Nickname')
     submit = SubmitField('Show')
 
-class addCommnetForm(FlaskForm):
+class addCommentForm(FlaskForm):
     from_user = StringField('Username')
     comment = StringField('Comment', [Required()])
     msg_id = StringField('msg_id')
@@ -27,3 +27,7 @@ class RegisterForm(FlaskForm):
     username = StringField('Username', [Required()])
     password = PasswordField('Password', [Required()])
     login = StringField('Login', [Required()])
+
+class checkForm(FlaskForm):
+    msg_id = IntegerField('msg_id')
+    submit_check = SubmitField('Add favourite')

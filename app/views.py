@@ -10,24 +10,39 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route('/index')
 @app.route('/<code>', methods=['GET','POST'])
 def index(code='chat_ru'):
+    print (request.endpoint)
 
     form = forms.chatSetForm()
-    comm_form = forms.addCommnetForm()
+    comm_form = forms.addCommentForm()
+    check_form = forms.checkForm()
 
     messages = []
 
+    #check all forms for submitting
     if form.submit.data and form.validate_on_submit():
-
+        #store chosen time period in session to save it from request ro request
         session['from'] = datetime.strftime(form.from_date.data, "%Y.%m.%d %H:%M:%S")
         session['to'] = datetime.strftime(form.to_date.data, "%Y.%m.%d %H:%M:%S")
         session['nickname'] = form.nickname.data
     elif comm_form.submit_comment.data and comm_form.validate_on_submit():
         current_app.database.add_comment(comm_form.data)
+    elif check_form.submit_check.data and check_form.validate_on_submit():
+        current_app.database.add_favourite(request.form)
 
-    messages = [i for i in current_app.database.messages_in_period(session.get('from', None), session.get('to', None), code, session.get('nickname', None))]
+    filter_args = [session.get('from', None), session.get('to', None), code, session.get('nickname', None)]
+
+    #if user is admin and he wants only favourite messages - add query to filter
+    if request.args.get('favourite', False) and session.get('logged_in', False):
+        filter_args.append(True)
+
+    #get messages from db with specified parameters
+    messages = [i for i in current_app.database.messages_in_period(*filter_args)]
     messages = list(reversed(messages))
+
+    #slice messages list for pages
     pages = [messages[i:i + 200] for i in range(0, len(messages), 200)]
 
+    #if no page requested, default to 0
     if request.args.get('page', None):
         page = int(request.args['page'])
     else:
@@ -38,7 +53,7 @@ def index(code='chat_ru'):
     #check if it is admin
     #if yes - show comment form
     if session.get('logged_in', False):
-        return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form, cur_username=session['username'], code=code, date=cur_dates)
+        return render_template('index.html', logs=pages, page=page, form=form, form2=comm_form, form3=check_form, cur_username=session['username'], code=code, date=cur_dates)
 
     #if not, not allow user to write comments to messages
     return render_template('index.html', logs=pages, page=page, form=form, code=code, date=cur_dates)

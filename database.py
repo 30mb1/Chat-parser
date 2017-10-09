@@ -75,6 +75,19 @@ class Storage(object):
             upsert=True
         )
 
+    def add_favourite(self, data):
+        values_list = [int(num) for num in data.getlist('msg_id')]
+        self.database['messages'].update_many(
+            {
+                'msg_id' : { '$in' : values_list }
+            },
+            {
+                '$set' : {
+                    'favourite' : True
+                }
+            }
+        )
+
     def add_comment(self, data):
         username = data['from_user'] if data['from_user'] != '' else 'Anonymous'
         self.database['comments'].insert_one(
@@ -87,7 +100,7 @@ class Storage(object):
         )
 
 
-    def messages_in_period(self, from_, to_, channel, nickname=None):
+    def messages_in_period(self, from_, to_, channel, nickname=None, favourite=None):
         if from_ == None or to_ == None:
             #if no input, return current day
             today = datetime.combine(date.today(), datetime.min.time())
@@ -119,5 +132,7 @@ class Storage(object):
 
         if nickname:
             find_query['$match']['login'] = nickname
+        if favourite:
+            find_query['$match']['favourite'] = True
 
         return self.database['messages'].aggregate([find_query, join_query])

@@ -41,6 +41,14 @@
                         <p>RU</p>
                     </a>
                 <li/>
+                {% if cur_username %}
+                    <li>
+                        <a href="/chat_ru?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>RU favourite</p>
+                        </a>
+                    </li>
+                {% endif %}
                 {% if code == 'chat_en' %}
                     <li class="active">
                 {% else %}
@@ -51,6 +59,14 @@
                         <p>EN</p>
                     </a>
                 <li/>
+                {% if cur_username %}
+                    <li>
+                        <a href="/chat_en?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>EN favourite</p>
+                        </a>
+                    </li>
+                {% endif %}
                 {% if code == 'chat_cn' %}
                     <li class="active">
                 {% else %}
@@ -61,6 +77,14 @@
                         <p>CN</p>
                     </a>
                 <li/>
+                {% if cur_username %}
+                    <li>
+                        <a href="/chat_cn?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>CN favourite</p>
+                        </a>
+                    </li>
+                {% endif %}
 
                 {% if cur_username %}
                 <li>
@@ -185,9 +209,14 @@
                     <div class="card ">
                         <div class="row">
                             <div class="header">
-                                <div class="col-md-6">
+                                <div class="col-md-2">
                                     <h4 class="title">Chat history</h4>
                                 </div>
+                                {% if cur_username %}
+                                <div class="col-md-3">
+                                    <input class="button button-rounded button-primary" form="checkForm" name="submit_check" type="submit" value="add Favourite">
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="content">
@@ -195,6 +224,7 @@
                                 <table class="table table-condensed">
                                     <thead>
                                         <tr>
+                                            <th>Favourite</th>
                                             <th>Data</th>
                                             <th>User</th>
                                             <th>Text</th>
@@ -205,41 +235,52 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for log in logs[page] %}
-                                        <tr>
-                                            <td class="col-md-1" style="vertical-align: top;">{{log.date.strftime("%Y.%m.%d %H:%M:%S")}}</td>
-                                            <td class="col-md-1" style="vertical-align: top;">{{"{}".format(log.login)}}</td>
-                                            <td class="col-md-4" style="vertical-align: top;">{{log.msg}}</td>
-                                            <td class="col-md-3" style="vertical-align: top;">
-                                                {% for com in log.comments %}
-                                                <b>{{com.username}}:</b> {{com.text}}<br/>
-                                                {% endfor %}
-                                            </td>
-
-                                            {% if cur_username %}
-                                            <td class="col-md-3" style="vertical-align: top;">
-
-                                                <form action="/{{code}}" method="post">
-                                                    {{ form2.csrf_token }}
-                                                    <input type="hidden" class="form-control" value={{cur_username}} name="from_user">
-
-                                                    <div class="input-group">
-
-                                                        <input type="text" class="form-control" placeholder="comment" name="comment">
-                                                        <input type="hidden"  name="submit_comment" value="+">
-                                                        <input type="hidden"  name="msg_id" value="{{log.msg_id}}">
-                                                        <div class="input-group-btn">
-                                                          <button class="button button-primary button-square" type="submit">
-                                                            <i class="fa fa-plus"></i>
-                                                          </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </td>
+                                        <form id="checkForm" action="/{{code}}" method="post">
+                                            {% for log in logs[page] %}
+                                            {% if log.favourite and cur_username %}
+                                            <tr class="info">
+                                            {% else %}
+                                            <tr>
                                             {% endif %}
+                                                {% if cur_username %}
+                                                <td class="col-md-1" style="vertical-align: top; width: 1%;">
+                                                    <input type="checkbox" name="msg_id" value="{{log.msg_id}}" class="form-check-input" form="checkForm">
+                                                </td>
+                                                {% endif %}
+                                                <td class="col-md-1" style="vertical-align: top;">{{log.date.strftime("%Y.%m.%d %H:%M:%S")}}</td>
+                                                <td class="col-md-1" style="vertical-align: top;">{{"{}".format(log.login)}}</td>
+                                                <td class="col-md-4" style="vertical-align: top;">{{log.msg}}</td>
+                                                <td class="col-md-3" style="vertical-align: top;">
+                                                    {% for com in log.comments %}
+                                                    <b>{{com.username}}:</b> {{com.text}}<br/>
+                                                    {% endfor %}
+                                                </td>
 
-                                        </tr>
-                                        {% endfor %}
+                                                {% if cur_username %}
+                                                <td class="col-md-3" style="vertical-align: top;">
+
+                                                    <form id="comForm{{loop.index}}" action="/{{code}}" method="post">
+                                                        {{ form2.csrf_token }}
+                                                        <input type="hidden" class="form-control" value={{cur_username}} name="from_user" form="comForm{{loop.index}}">
+
+                                                        <div class="input-group">
+
+                                                            <input type="text" class="form-control" placeholder="comment" name="comment" form="comForm{{loop.index}}">
+                                                            <input type="hidden"  name="submit_comment" value="+" form="comForm{{loop.index}}">
+                                                            <input type="hidden"  name="msg_id" value="{{log.msg_id}}" form="comForm{{loop.index}}">
+                                                            <div class="input-group-btn">
+                                                              <button class="button button-primary button-square" type="submit" form="comForm{{loop.index}}">
+                                                                <i class="fa fa-plus"></i>
+                                                              </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </td>
+                                                {% endif %}
+
+                                            </tr>
+                                            {% endfor %}
+                                        </form>
                                     </tbody>
                                 </table>
                             </div>
