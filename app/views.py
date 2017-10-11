@@ -10,7 +10,6 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route('/index')
 @app.route('/<code>', methods=['GET','POST'])
 def index(code='chat_ru'):
-    print (request.endpoint)
 
     form = forms.chatSetForm()
     comm_form = forms.addCommentForm()
