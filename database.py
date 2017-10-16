@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from datetime import datetime, timedelta, date
-
+import html
 
 class Storage(object):
     def __init__(self):
@@ -61,6 +61,7 @@ class Storage(object):
         )
 
     def save_message(self, data, channel):
+        data['msg'] = html.unescape(data['msg'])
         data['channel'] = channel
         data['date'] = datetime.utcnow()
         self.database['messages'].update_one(
@@ -100,7 +101,7 @@ class Storage(object):
         )
 
 
-    def messages_in_period(self, from_, to_, channel, nickname=None, favourite=None):
+    def messages_in_period(self, from_, to_, channel='chat_ru', nickname=None, favourite=None):
         if from_ == None or to_ == None:
             #if no input, return current day
             today = datetime.combine(date.today(), datetime.min.time())

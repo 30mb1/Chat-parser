@@ -2,7 +2,9 @@ from app import app, forms
 from flask import render_template, request, redirect, url_for, session, current_app, flash, send_from_directory
 from datetime import datetime, timedelta, date
 from database import Storage
+from utils import generate_report
 import logging
+import os
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -10,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route('/index')
 @app.route('/<code>', methods=['GET','POST'])
 def index(code='chat_ru'):
-
+    session['code'] = code
     form = forms.chatSetForm()
     comm_form = forms.addCommentForm()
     check_form = forms.checkForm()
@@ -33,6 +35,9 @@ def index(code='chat_ru'):
     #if user is admin and he wants only favourite messages - add query to filter
     if request.args.get('favourite', False) and session.get('logged_in', False):
         filter_args.append(True)
+        session['favourite'] = True
+    else:
+        session['favourite'] = False
 
     #get messages from db with specified parameters
     messages = [i for i in current_app.database.messages_in_period(*filter_args)]
@@ -71,6 +76,18 @@ def account():
 
     return redirect(url_for('index'))
 
+@app.route('/report')
+def get_report():
+    generate_report(session)
+    try:
+        return send_from_directory(
+            os.path.join(os.getcwd(), 'tmp'),
+            'report.csv',
+            as_attachment=True
+        )
+    except Exception as e:
+        print (e)
+        return redirect(url_for('index'))
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -103,7 +120,6 @@ def register():
 @app.route('/logout')
 def logout():
     session.clear()
-
     return redirect(url_for('index'))
 
 @app.before_request

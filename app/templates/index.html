@@ -217,6 +217,13 @@
                                     <input class="button button-rounded button-primary" form="checkForm" name="submit_check" type="submit" value="add Favourite">
                                 </div>
                                 {% endif %}
+                                {% if cur_username %}
+                                <div class="col-md-3">
+                                    <a href="/report" class="button button-rounded button-primary">
+                                        Download log
+                                    </a>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="content">
@@ -237,7 +244,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <form id="checkForm" action="/{{code}}" method="post">
+                                        <form id="checkForm" action="/{{code}}" method="post"></form>
                                             {% for log in logs[page] %}
                                             {% if log.favourite and cur_username %}
                                             <tr class="info">
@@ -282,7 +289,7 @@
 
                                             </tr>
                                             {% endfor %}
-                                        </form>
+
                                     </tbody>
                                 </table>
                             </div>
