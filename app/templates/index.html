@@ -254,12 +254,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {% if cur_username %}
                                         <form id="checkForm" action="/{{code}}" method="post">
                                             {{ form3.csrf_token }}
                                         </form>
                                         <form id="clearForm" action="/{{code}}" method="post">
                                             {{ form4.csrf_token }}
                                         </form>
+                                        {% endif %}
                                             {% for log in logs[page] %}
                                             {% if log.favourite and cur_username %}
                                             <tr class="info">
