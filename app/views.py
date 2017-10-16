@@ -13,6 +13,8 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route('/<code>', methods=['GET','POST'])
 def index(code='chat_ru'):
     session['code'] = code
+
+    #define all forms
     form = forms.chatSetForm()
     comm_form = forms.addCommentForm()
     check_form = forms.checkForm()
@@ -21,21 +23,31 @@ def index(code='chat_ru'):
     messages = []
 
     #check all forms for submitting
+
+    #form with data and nickname
     if form.submit.data and form.validate_on_submit():
         #store chosen time period in session to save it from request ro request
         session['from'] = datetime.strftime(form.from_date.data, "%Y.%m.%d %H:%M:%S")
         session['to'] = datetime.strftime(form.to_date.data, "%Y.%m.%d %H:%M:%S")
         session['nickname'] = form.nickname.data
+
+    #form for comments
     elif comm_form.submit_comment.data and comm_form.validate_on_submit():
         current_app.database.add_comment(comm_form.data)
+
+    #checkbox form for adding new favourites. Check for add button
     elif check_form.add_check.data and check_form.validate_on_submit():
         current_app.database.add_favourite(request.form)
+
+    #same form but checking for dell button
     elif check_form.dell_check.data and check_form.validate_on_submit():
         current_app.database.dell_favourite(request.form)
+
+    #form for deleting all favourites for channel
     elif clear_favourite_form.clear_submit.data:
         current_app.database.clear_favourite(code)
 
-
+    #get filters, that we will use for getting messages from db
     filter_args = [session.get('from', None), session.get('to', None), code, session.get('nickname', None)]
 
     #if user is admin and he wants only favourite messages - add query to filter
@@ -60,8 +72,8 @@ def index(code='chat_ru'):
 
     cur_dates = { 'from' : session.get('from', 'Today'), 'to' : session.get('to', 'Today') }
 
-    #check if it is admin
-    #if yes - show comment form
+    #check if user is logged in (only admins have accounts)
+    #if yes - show all forms and control buttons
     if session.get('logged_in', False):
         return render_template(
                         'index.html',
@@ -76,11 +88,12 @@ def index(code='chat_ru'):
                         date=cur_dates
                     )
 
-    #if not, not allow user to write comments to messages
+    #if not, not allow user to write comments to messages and etc.
     return render_template('index.html', logs=pages, page=page, form=form, code=code, date=cur_dates)
 
 @app.route('/report')
 def get_report():
+    #create temporary file and send it
     generate_report(session)
     try:
         return send_from_directory(
@@ -95,5 +108,6 @@ def get_report():
 
 @app.before_first_request
 def before_first_request():
+    #upload database object to current_app
     current_app.database = Storage()
     return
