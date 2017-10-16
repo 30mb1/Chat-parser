@@ -213,12 +213,22 @@
                                     <h4 class="title">Chat history</h4>
                                 </div>
                                 {% if cur_username %}
-                                <div class="col-md-3">
-                                    <input class="button button-rounded button-primary" form="checkForm" name="submit_check" type="submit" value="add Favourite">
+                                <div class="col-md-2">
+                                    <input class="button button-rounded button-primary" form="checkForm" name="add_check" type="submit" value="add Favourite">
                                 </div>
                                 {% endif %}
                                 {% if cur_username %}
-                                <div class="col-md-3">
+                                <div class="col-md-2">
+                                    <input class="button button-rounded button-primary" form="checkForm" name="dell_check" type="submit" value="dell Favourite">
+                                </div>
+                                {% endif %}
+                                {% if cur_username %}
+                                <div class="col-md-2">
+                                    <input class="button button-rounded button-primary" form="clearForm" name="clear_submit" type="submit" value="clear Favourite">
+                                </div>
+                                {% endif %}
+                                {% if cur_username %}
+                                <div class="col-md-2">
                                     <a href="/report" class="button button-rounded button-primary">
                                         Download log
                                     </a>
@@ -244,7 +254,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <form id="checkForm" action="/{{code}}" method="post"></form>
+                                        <form id="checkForm" action="/{{code}}" method="post">
+                                            {{ form3.csrf_token }}
+                                        </form>
+                                        <form id="clearForm" action="/{{code}}" method="post">
+                                            {{ form4.csrf_token }}
+                                        </form>
                                             {% for log in logs[page] %}
                                             {% if log.favourite and cur_username %}
                                             <tr class="info">

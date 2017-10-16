@@ -88,6 +88,31 @@ class Storage(object):
                 }
             }
         )
+    def dell_favourite(self, data):
+        values_list = [int(num) for num in data.getlist('msg_id')]
+        self.database['messages'].update_many(
+            {
+                'msg_id' : { '$in' : values_list }
+            },
+            {
+                '$set' : {
+                    'favourite' : False
+                }
+            }
+        )
+
+    def clear_favourite(self, code):
+        self.database['messages'].update_many(
+            {
+                'favourite' : True,
+                'channel' : code
+            },
+            {
+                '$set' : {
+                    'favourite' : False
+                }
+            }
+        )
 
     def add_comment(self, data):
         username = data['from_user'] if data['from_user'] != '' else 'Anonymous'

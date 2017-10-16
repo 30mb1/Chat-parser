@@ -30,4 +30,8 @@ class RegisterForm(FlaskForm):
 
 class checkForm(FlaskForm):
     msg_id = IntegerField('msg_id')
-    submit_check = SubmitField('Add favourite')
+    add_check = SubmitField('Add favourite')
+    dell_check = SubmitField('Dell favourite')
+
+class delFavouriteForm(FlaskForm):
+    clear_submit = SubmitField('Clear Favourite')
