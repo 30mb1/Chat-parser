@@ -185,8 +185,28 @@ class Storage(object):
             }
         )
 
-    def get_logs(self):
-        return self.database['history'].find()
+    def get_logs_in_period(self, from_, to_, user=None):
+        if from_ == None or to_ == None:
+            #if no input, return current day
+            today = datetime.combine(date.today(), datetime.min.time())
+            next_day = today + timedelta(days=1)
+            from_ = datetime.strftime(today, "%Y.%m.%d %H:%M:%S")
+            to_ = datetime.strftime(next_day, "%Y.%m.%d %H:%M:%S")
+
+        from_ = datetime.strptime(from_, "%Y.%m.%d %H:%M:%S")
+        to_ = datetime.strptime(to_, "%Y.%m.%d %H:%M:%S")
+
+        find_query = {
+            'date' : {
+                '$gte' : from_,
+                '$lte' : to_
+            }
+        }
+
+        if user:
+            find_query['login'] = user
+
+        return self.database['history'].find(find_query)
 
 
     def add_comment(self, data):

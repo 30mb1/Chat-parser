@@ -40,60 +40,48 @@
                             <p>RU</p>
                         </a>
                     <li/>
-                    {% if cur_username %}
-                        <li>
-                            <a href="/chat_ru?favourite=True">
-                                <i class="pe-7s-global"></i>
-                                <p>RU favourite</p>
-                            </a>
-                        </li>
-                    {% endif %}
+                    <li>
+                        <a href="/chat_ru?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>RU favourite</p>
+                        </a>
+                    </li>
                     <li>
                         <a href="/chat_en">
                             <i class="pe-7s-global"></i>
                             <p>EN</p>
                         </a>
                     <li/>
-                    {% if cur_username %}
-                        <li>
-                            <a href="/chat_en?favourite=True">
-                                <i class="pe-7s-global"></i>
-                                <p>EN favourite</p>
-                            </a>
-                        </li>
-                    {% endif %}
+                    <li>
+                        <a href="/chat_en?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>EN favourite</p>
+                        </a>
+                    </li>
                     <li>
                         <a href="/chat_cn">
                             <i class="pe-7s-global"></i>
                             <p>CN</p>
                         </a>
                     <li/>
-                    {% if cur_username %}
-                        <li>
-                            <a href="/chat_cn?favourite=True">
-                                <i class="pe-7s-global"></i>
-                                <p>CN favourite</p>
-                            </a>
-                        </li>
-                    {% endif %}
-
-                    {% if cur_username %}
-                        <li>
-                            <a href="/logs">
-                                <i class="pe-7s-notebook"></i>
-                                <p>Logs</p>
-                            </a>
-                        </li>
-                    {% endif %}
-
-                    {% if cur_username %}
+                    <li>
+                        <a href="/chat_cn?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>CN favourite</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logs">
+                            <i class="pe-7s-notebook"></i>
+                            <p>Logs</p>
+                        </a>
+                    </li>
                     <li class="active">
                         <a href="/account">
                             <i class="pe-7s-user"></i>
                             <p>Account</p>
                         </a>
                     </li>
-                    {% endif %}
                 </ul>
         	</div>
         </div>
@@ -107,15 +95,9 @@
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                {% if cur_username %}
                                 <a href="/logout">
                                     <p>Log Out</p>
                                 </a>
-                                {% else %}
-                                <a href="/login">
-                                    <p>Log In</p>
-                                </a>
-                                {% endif %}
                             </li>
                             <li class="separator hidden-lg hidden-md"></li>
                         </ul>

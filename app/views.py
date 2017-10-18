@@ -1,5 +1,5 @@
 from app import app, forms
-from flask import render_template, request, redirect, url_for, session, current_app, flash, send_from_directory
+from flask import render_template, request, redirect, url_for, session, current_app, flash, send_from_directory, abort
 from datetime import datetime, timedelta, date
 from database import Storage
 from utils import generate_report
@@ -94,9 +94,20 @@ def index(code='chat_ru'):
     #if not, not allow user to write comments to messages and etc.
     return render_template('index.html', logs=pages, page=page, form=form, code=code, date=cur_dates)
 
-@app.route('/logs')
+@app.route('/logs', methods=['GET','POST'])
 def log():
-    logs = [i for i in current_app.database.get_logs()]
+    if not session.get('logged_in', False):
+        abort(404)
+
+    form = forms.chatSetForm()
+
+    if form.submit.data and form.validate_on_submit():
+        #store chosen time period in session to save it from request ro request
+        session['from_logs'] = datetime.strftime(form.from_date.data, "%Y.%m.%d %H:%M:%S")
+        session['to_logs'] = datetime.strftime(form.to_date.data, "%Y.%m.%d %H:%M:%S")
+        session['user_logs'] = form.nickname.data
+
+    logs = [i for i in current_app.database.get_logs_in_period(session.get('from_logs', None), session.get('to_logs', None), session.get('user_logs', None))]
     logs = list(reversed(logs))
 
     #slice logs list for pages
@@ -107,10 +118,14 @@ def log():
     else:
         page = 0
 
-    return render_template('logs.html', logs=pages, page=page, cur_username=session['username'])
+    cur_dates = { 'from' : session.get('from_logs', 'Today'), 'to' : session.get('to_logs', 'Today') }
+
+    return render_template('logs.html', logs=pages, page=page, form=form, date=cur_dates)
 
 @app.route('/report')
 def get_report():
+    if not session.get('logged_in', False):
+        abort(404)
     #create temporary file and send it
     generate_report(session)
     try:
@@ -122,7 +137,6 @@ def get_report():
     except Exception as e:
         print (e)
         return redirect(url_for('index'))
-
 
 @app.before_first_request
 def before_first_request():

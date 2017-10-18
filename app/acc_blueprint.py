@@ -1,11 +1,13 @@
 from app import forms
-from flask import render_template, request, redirect, url_for, session, current_app, Blueprint
+from flask import render_template, request, redirect, url_for, session, current_app, Blueprint, abort
 
 user_pages = Blueprint('user_pages', __name__,
                         template_folder='templates')
 
 @user_pages.route('/account',  methods=['GET','POST'])
 def account():
+    if not session.get('logged_in', False):
+        abort(404)
     form = forms.udpateAccountForm()
 
     #form for changing username
