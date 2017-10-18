@@ -6,6 +6,9 @@ from utils import generate_report
 import logging
 import os
 
+# amount of rows on page
+PAGE_LEN = 200
+
 logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/')
@@ -62,7 +65,7 @@ def index(code='chat_ru'):
     messages = list(reversed(messages))
 
     #slice messages list for pages
-    pages = [messages[i:i + 200] for i in range(0, len(messages), 200)]
+    pages = [messages[i:i + PAGE_LEN] for i in range(0, len(messages), PAGE_LEN)]
 
     #if no page requested, default to 0
     if request.args.get('page', None):
@@ -90,6 +93,21 @@ def index(code='chat_ru'):
 
     #if not, not allow user to write comments to messages and etc.
     return render_template('index.html', logs=pages, page=page, form=form, code=code, date=cur_dates)
+
+@app.route('/logs')
+def log():
+    logs = [i for i in current_app.database.get_logs()]
+    logs = list(reversed(logs))
+
+    #slice logs list for pages
+    pages = [logs[i:i + PAGE_LEN] for i in range(0, len(logs), PAGE_LEN)]
+
+    if request.args.get('page', None):
+        page = int(request.args['page'])
+    else:
+        page = 0
+
+    return render_template('logs.html', logs=pages, page=page, cur_username=session['username'])
 
 @app.route('/report')
 def get_report():

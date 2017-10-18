@@ -185,6 +185,10 @@ class Storage(object):
             }
         )
 
+    def get_logs(self):
+        return self.database['history'].find()
+
+
     def add_comment(self, data):
         username = data['from_user'] if data['from_user'] != '' else 'Anonymous'
         self.database['comments'].insert_one(

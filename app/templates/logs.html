@@ -1,0 +1,204 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+	<title>Wex chat parser</title>
+
+    <!-- Bootstrap core CSS     -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+
+    <!-- Datetimepicker files  -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}">
+
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href="{{ url_for('static', filename='css/light-bootstrap-dashboard.css') }}" rel="stylesheet"/>
+    <!--     Fonts and icons     -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+    <link href="{{ url_for('static', filename='css/pe-icon-7-stroke.css') }}" rel="stylesheet" />
+
+
+
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="{{ url_for('static', filename='img/sidebar-5.jpg') }}">
+
+    	<div class="sidebar-wrapper">
+
+            <ul class="nav">
+                <li>
+                    <a href="/chat_ru">
+                        <i class="pe-7s-global"></i>
+                        <p>RU</p>
+                    </a>
+                <li/>
+                {% if cur_username %}
+                    <li>
+                        <a href="/chat_ru?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>RU favourite</p>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="/chat_en">
+                        <i class="pe-7s-global"></i>
+                        <p>EN</p>
+                    </a>
+                <li/>
+                {% if cur_username %}
+                    <li>
+                        <a href="/chat_en?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>EN favourite</p>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="/chat_cn">
+                        <i class="pe-7s-global"></i>
+                        <p>CN</p>
+                    </a>
+                <li/>
+                {% if cur_username %}
+                    <li>
+                        <a href="/chat_cn?favourite=True">
+                            <i class="pe-7s-global"></i>
+                            <p>CN favourite</p>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if cur_username %}
+                    <li class="active">
+                        <a href="/logs">
+                            <i class="pe-7s-notebook"></i>
+                            <p>Logs</p>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if cur_username %}
+                <li>
+                    <a href="/account">
+                        <i class="pe-7s-user"></i>
+                        <p>Account</p>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+    	</div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                    </button>
+                    <a class="navbar-brand">Dashboard</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            {% if cur_username %}
+                            <a href="/logout">
+                                <p>Log Out</p>
+                            </a>
+                            {% else %}
+                            <a href="/login">
+                                <p>Log In</p>
+                            </a>
+                            {% endif %}
+                        </li>
+                        <li class="separator hidden-lg hidden-md"></li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+
+
+
+
+        <div class="content">
+            <div class="container-fluid">
+
+
+                <ul class="pagination">
+                    {% for log in logs %}
+                        {% if loop.index - 1 == page %}
+                            <li class="active"><a href="/logs?page={{loop.index - 1}}">{{loop.index}}</a></li>
+                        {% else %}
+                            <li><a href="/logs?page={{loop.index - 1}}">   {{loop.index}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+                <div class="row">
+                    <div class="card ">
+                        <div class="row">
+                            <div class="header">
+                                <div class="col-md-2">
+                                    <h4 class="title">Admin activity logs</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="table-full-width" style="height:auto; overflow: auto">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>User</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for log in logs[page] %}
+                                        <tr>
+                                            <td class="col-md-1" style="vertical-align: top;">{{log.date.strftime("%Y.%m.%d %H:%M:%S")}}</td>
+                                            <td class="col-md-1" style="vertical-align: top;">{{log.login}}</td>
+                                            <td>
+                                                {% if log.action == 'add' %}
+                                                    <b>Added</b> message to favourite: <i>'{{log.msg}}'</i> dated by {{log.msg_date.strftime("%Y.%m.%d %H:%M:%S")}}
+                                                {% elif log.action == 'del' %}
+                                                    <b>Removed</b> message from favourite: <i>'{{log.msg}}'</i> dated by {{log.msg_date.strftime("%Y.%m.%d %H:%M:%S")}}
+                                                {% else %}
+                                                    <b>Cleared</b> all favourites from channel <b>{{log.channel}}</b> in period: {{log.from.strftime("%Y.%m.%d %H:%M:%S")}} - {{log.to.strftime("%Y.%m.%d %H:%M:%S")}}
+                                                {% endif %}
+                                            </td>
+
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+    <!--   Core JS Files   -->
+    <script src="{{ url_for('static', filename='js/jquery-1.10.2.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap-checkbox-radio-switch.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap-notify.js') }}"></script>
+
+</html>

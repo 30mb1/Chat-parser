@@ -34,11 +34,7 @@
         <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
         	<div class="sidebar-wrapper">
                 <ul class="nav">
-                    {% if code == 'chat_ru' %}
-                        <li class="active">
-                    {% else %}
-                        <li>
-                    {% endif %}
+                    <li>
                         <a href="/chat_ru">
                             <i class="pe-7s-global"></i>
                             <p>RU</p>
@@ -52,11 +48,7 @@
                             </a>
                         </li>
                     {% endif %}
-                    {% if code == 'chat_en' %}
-                        <li class="active">
-                    {% else %}
-                        <li>
-                    {% endif %}
+                    <li>
                         <a href="/chat_en">
                             <i class="pe-7s-global"></i>
                             <p>EN</p>
@@ -70,11 +62,7 @@
                             </a>
                         </li>
                     {% endif %}
-                    {% if code == 'chat_cn' %}
-                        <li class="active">
-                    {% else %}
-                        <li>
-                    {% endif %}
+                    <li>
                         <a href="/chat_cn">
                             <i class="pe-7s-global"></i>
                             <p>CN</p>
@@ -85,6 +73,15 @@
                             <a href="/chat_cn?favourite=True">
                                 <i class="pe-7s-global"></i>
                                 <p>CN favourite</p>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if cur_username %}
+                        <li>
+                            <a href="/logs">
+                                <i class="pe-7s-notebook"></i>
+                                <p>Logs</p>
                             </a>
                         </li>
                     {% endif %}
