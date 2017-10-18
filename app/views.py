@@ -37,15 +37,15 @@ def index(code='chat_ru'):
 
     #checkbox form for adding new favourites. Check for add button
     elif check_form.add_check.data and check_form.validate_on_submit():
-        current_app.database.add_favourite(request.form)
+        current_app.database.add_favourite(request.form, session['login'])
 
     #same form but checking for dell button
     elif check_form.dell_check.data and check_form.validate_on_submit():
-        current_app.database.dell_favourite(request.form)
+        current_app.database.dell_favourite(request.form, session['login'])
 
     #form for deleting all favourites for channel
     elif clear_favourite_form.clear_submit.data:
-        current_app.database.clear_favourite(code)
+        current_app.database.clear_favourite(session.get('from', None), session.get('to', None), code, session['login'])
 
     #get filters, that we will use for getting messages from db
     filter_args = [session.get('from', None), session.get('to', None), code, session.get('nickname', None)]

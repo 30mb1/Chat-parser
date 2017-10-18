@@ -76,7 +76,32 @@ class Storage(object):
             upsert=True
         )
 
-    def add_favourite(self, data):
+    def get_message_by_id(self, msg_id):
+        return self.database['messages'].find_one(
+            { 'msg_id' : int(msg_id) }
+        )
+
+    def add_favourite(self, data, user):
+        values_list = []
+        logs = []
+
+        for num in data.getlist('msg_id'):
+            values_list.append(int(num))
+
+            msg = self.get_message_by_id(int(num))
+            logs.append(
+                {
+                    'action' : 'add',
+                    'login' : user,
+                    'msg' : msg['msg'],
+                    'msg_date' : msg['date'],
+                    'msg_user' : msg['login'],
+                    'date' : datetime.utcnow()
+                }
+            )
+
+        self.database['history'].insert_many(logs)
+
         values_list = [int(num) for num in data.getlist('msg_id')]
         self.database['messages'].update_many(
             {
@@ -88,8 +113,27 @@ class Storage(object):
                 }
             }
         )
-    def dell_favourite(self, data):
-        values_list = [int(num) for num in data.getlist('msg_id')]
+    def dell_favourite(self, data, user):
+        values_list = []
+        logs = []
+
+        for num in data.getlist('msg_id'):
+            values_list.append(int(num))
+
+            msg = self.get_message_by_id(int(num))
+            logs.append(
+                {
+                    'action' : 'del',
+                    'login' : user,
+                    'msg' : msg['msg'],
+                    'msg_date' : msg['date'],
+                    'msg_user' : msg['login'],
+                    'date' : datetime.utcnow()
+                }
+            )
+
+        self.database['history'].insert_many(logs)
+
         self.database['messages'].update_many(
             {
                 'msg_id' : { '$in' : values_list }
@@ -101,12 +145,39 @@ class Storage(object):
             }
         )
 
-    def clear_favourite(self, code):
+    def clear_favourite(self, from_, to_, code, user):
+        # clear all favourite in given period
+        if from_ == None or to_ == None:
+            #if no input, return current day
+            today = datetime.combine(date.today(), datetime.min.time())
+            next_day = today + timedelta(days=1)
+            from_ = datetime.strftime(today, "%Y.%m.%d %H:%M:%S")
+            to_ = datetime.strftime(next_day, "%Y.%m.%d %H:%M:%S")
+
+        from_ = datetime.strptime(from_, "%Y.%m.%d %H:%M:%S")
+        to_ = datetime.strptime(to_, "%Y.%m.%d %H:%M:%S")
+
+        self.database['history'].insert_one(
+            {
+                'action' : 'clear',
+                'channel' : code,
+                'login' : user,
+                'date' : datetime.utcnow(),
+                'from' : from_,
+                'to' : to_
+            }
+        )
+
         self.database['messages'].update_many(
             {
                 'favourite' : True,
-                'channel' : code
+                'channel' : code,
+                'date' : {
+                    '$gte' : from_,
+                    '$lte' : to_
+                }
             },
+
             {
                 '$set' : {
                     'favourite' : False
