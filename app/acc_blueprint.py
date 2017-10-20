@@ -7,7 +7,7 @@ user_pages = Blueprint('user_pages', __name__,
 @user_pages.route('/account',  methods=['GET','POST'])
 def account():
     if not session.get('logged_in', False):
-        abort(404)
+        return redirect(url_for('user_pages.login'))
     form = forms.udpateAccountForm()
 
     #form for changing username
@@ -42,7 +42,7 @@ def register():
     if form.validate_on_submit():
         res = current_app.database.register_new_account(form.data)
         if res == True:
-            return redirect(url_for('login'))
+            return redirect(url_for('user_pages.login'))
         else:
             error = res
 

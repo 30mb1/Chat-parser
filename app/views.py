@@ -97,7 +97,7 @@ def index(code='chat_ru'):
 @app.route('/logs', methods=['GET','POST'])
 def log():
     if not session.get('logged_in', False):
-        abort(404)
+        return redirect(url_for('user_pages.login'))
 
     form = forms.chatSetForm()
 
@@ -125,7 +125,7 @@ def log():
 @app.route('/report')
 def get_report():
     if not session.get('logged_in', False):
-        abort(404)
+        return redirect(url_for('user_pages.login'))
     #create temporary file and send it
     generate_report(session)
     try:
