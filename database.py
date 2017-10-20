@@ -100,7 +100,8 @@ class Storage(object):
                 }
             )
 
-        self.database['history'].insert_many(logs)
+        if len(logs) > 0:
+            self.database['history'].insert_many(logs)
 
         values_list = [int(num) for num in data.getlist('msg_id')]
         self.database['messages'].update_many(
