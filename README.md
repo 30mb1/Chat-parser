@@ -132,7 +132,7 @@ Now, when we configured everything, we can run our application
 cd chat-parser
 source venv/bin/activate
 # choose port, that we used in nginx .conf file earlier
-gunicorn app:app -b 127.0.0.1:8000 -w 8 --threads 8
+gunicorn app:app -b 127.0.0.1:8000 -w 8 --threads 8 # you can run it in screen too
 # you can set another number of workers or threads, depenging on your system characteristics
 # more detailed info you can find for example here
 # http://docs.gunicorn.org/en/stable/settings.html
